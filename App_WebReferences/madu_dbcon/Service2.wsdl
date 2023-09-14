@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Set_Higher_Education_Certificate_insert">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CertificateName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="COMPID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Set_Higher_Education_Certificate_insertResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Set_Higher_Education_Certificate_insertResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Set_Higher_Education_Certificate_List">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Cert_ID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="COMPID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Set_Higher_Education_Certificate_ListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Set_Higher_Education_Certificate_ListResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Set_Higher_Education_Certificate_Manage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Cert_ID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="ManageType" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="COMPID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="UserID" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Set_Higher_Education_Certificate_ManageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Set_Higher_Education_Certificate_ManageResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_company_details">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="COMPID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_company_detailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_company_detailsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_training_category_details">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="COMPID" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="get_training_category_detailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="get_training_category_detailsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="Set_Higher_Education_Certificate_insertSoapIn">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_insert" />
+  </wsdl:message>
+  <wsdl:message name="Set_Higher_Education_Certificate_insertSoapOut">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_insertResponse" />
+  </wsdl:message>
+  <wsdl:message name="Set_Higher_Education_Certificate_ListSoapIn">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_List" />
+  </wsdl:message>
+  <wsdl:message name="Set_Higher_Education_Certificate_ListSoapOut">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_ListResponse" />
+  </wsdl:message>
+  <wsdl:message name="Set_Higher_Education_Certificate_ManageSoapIn">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_Manage" />
+  </wsdl:message>
+  <wsdl:message name="Set_Higher_Education_Certificate_ManageSoapOut">
+    <wsdl:part name="parameters" element="tns:Set_Higher_Education_Certificate_ManageResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_company_detailsSoapIn">
+    <wsdl:part name="parameters" element="tns:get_company_details" />
+  </wsdl:message>
+  <wsdl:message name="get_company_detailsSoapOut">
+    <wsdl:part name="parameters" element="tns:get_company_detailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="get_training_category_detailsSoapIn">
+    <wsdl:part name="parameters" element="tns:get_training_category_details" />
+  </wsdl:message>
+  <wsdl:message name="get_training_category_detailsSoapOut">
+    <wsdl:part name="parameters" element="tns:get_training_category_detailsResponse" />
+  </wsdl:message>
+  <wsdl:portType name="Service2Soap">
+    <wsdl:operation name="Set_Higher_Education_Certificate_insert">
+      <wsdl:input message="tns:Set_Higher_Education_Certificate_insertSoapIn" />
+      <wsdl:output message="tns:Set_Higher_Education_Certificate_insertSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_List">
+      <wsdl:input message="tns:Set_Higher_Education_Certificate_ListSoapIn" />
+      <wsdl:output message="tns:Set_Higher_Education_Certificate_ListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_Manage">
+      <wsdl:input message="tns:Set_Higher_Education_Certificate_ManageSoapIn" />
+      <wsdl:output message="tns:Set_Higher_Education_Certificate_ManageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_company_details">
+      <wsdl:input message="tns:get_company_detailsSoapIn" />
+      <wsdl:output message="tns:get_company_detailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="get_training_category_details">
+      <wsdl:input message="tns:get_training_category_detailsSoapIn" />
+      <wsdl:output message="tns:get_training_category_detailsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="Service2Soap" type="tns:Service2Soap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Set_Higher_Education_Certificate_insert">
+      <soap:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_insert" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_List">
+      <soap:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_List" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_Manage">
+      <soap:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_Manage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_company_details">
+      <soap:operation soapAction="http://tempuri.org/get_company_details" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_training_category_details">
+      <soap:operation soapAction="http://tempuri.org/get_training_category_details" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="Service2Soap12" type="tns:Service2Soap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Set_Higher_Education_Certificate_insert">
+      <soap12:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_insert" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_List">
+      <soap12:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_List" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Set_Higher_Education_Certificate_Manage">
+      <soap12:operation soapAction="http://tempuri.org/Set_Higher_Education_Certificate_Manage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_company_details">
+      <soap12:operation soapAction="http://tempuri.org/get_company_details" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="get_training_category_details">
+      <soap12:operation soapAction="http://tempuri.org/get_training_category_details" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service2">
+    <wsdl:port name="Service2Soap" binding="tns:Service2Soap">
+      <soap:address location="http://localhost:54382/Service2.asmx" />
+    </wsdl:port>
+    <wsdl:port name="Service2Soap12" binding="tns:Service2Soap12">
+      <soap12:address location="http://localhost:54382/Service2.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

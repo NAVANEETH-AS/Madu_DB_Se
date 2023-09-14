@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+<configuration>
+  <system.web>
+    <compilation debug="false" targetFramework="4.5"/>
+    <httpRuntime targetFramework="4.5"/>
+  </system.web>
+  <appSettings>
+    <add key="madu_dbcon.service" value="https://uatlms.manappuram.com/madudb_ser/service3.asmx"/>
+  <add key="madu_dbcon.service1" value="http://localhost:54438/Service1.asmx"/>
+  </appSettings>
+</configuration>

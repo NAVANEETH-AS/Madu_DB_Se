@@ -1,0 +1,398 @@
+create or replace procedure proc_madu_get_ilt_usr_rprt(
+
+                                                 p_compId        in  number,
+                                                 p_userId        in varchar2,
+                                                 p_trng_id       in number,
+                                                 p_philosophy    in varchar2,
+                                                 p_startdate      in varchar2,
+                                                 p_end_date       in varchar2,
+                                                p_as_outresult    out     sys_refcursor,
+                                                p_type            in number,
+                                                p_Module_id       in number
+
+                                                ) as
+p_course_id   number;
+p_read varchar2(4000);
+--p_string varchar2(5000);
+begin
+
+if (p_type = 1) then
+   open p_as_outresult   for
+     'select ut.user_id,
+       td.training_id,
+       td.training_name,
+       td.training_code,
+       tt.training_type,
+       to_char(td.created_date) as created_date,
+       case
+         when ut.completion_status = 1 then
+          ''Completed''
+         when ut.completion_status = 0 then
+          ''Pending''
+         when ut.completion_status = 2 then
+          ''In Progress''
+         when ut.completion_status = 3 then
+          ''Expired''
+       end as Staus,
+       to_char(td.start_date) as start_date,
+       to_char(td.end_date) as end_date,
+       td.training_cordinator,
+       max(ts.session_number) as sess_count,
+       case
+         when td.has_exam = 0 then
+          to_char(max(st.created_date))
+         when td.has_exam = 1 then
+          to_char(min(uet.attend_date))
+       end as comp_date,
+
+       case
+         when (select sum(case
+                            when t.attented = 1 then
+                             1
+                            else
+                             0
+                          end) as attt
+                 from tbl_madu_trng_attendence t
+                where t.training_id = ut.trainning_id
+                  and t.comp_id = ut.company_id
+                  and t.user_id = ut.user_id) = max(ts.session_number) then
+          ''Attended''
+         else
+          ''Not Attended''
+       end as attendence_status,
+
+       case
+         when td.has_exam = 1 then
+          ''Yes''
+         when td.has_exam = 0 then
+          ''No''
+       end as with_exam,
+       em.exam_id,
+       qpm.question_paper_name,
+       em.total_marks,
+       uet.mark_scored,
+       case
+         when td.has_exam = 1 then
+             case when uet.result = 1 then
+          ''Pass''
+         else
+          ''Fail''
+          end
+       else '' '' end as exam_result,
+         decode(em.total_marks,0,0,round(uet.mark_scored/em.total_marks * 100)) as pass_percent
+
+  from tbl_madu_training_details td,
+       tbl_madu_training_type    tt,
+       tbl_madu_trng_user_track  ut
+  left join tbl_madu_srvy_usr_track st
+    on ut.trainning_id = st.srvy_id
+   and st.session_id is null
+   and ut.company_id = st.comp_id
+   and ut.user_id = st.user_id
+  left join tbl_madu_exam_mstr em
+    on ut.trainning_id = em.exam_crs_id
+   and ut.company_id = em.comp_id
+  left join tbl_madu_question_paper_model qpm
+    on em.exam_id = qpm.exam_id
+   and em.comp_id = qpm.comp_id
+  left join Tbl_Madu_User_Exam_Track uet
+    on qpm.exam_id = uet.exam_id
+   and qpm.comp_id = uet.comp_id
+   and ut.user_id = uet.user_id
+   and ut.company_id = uet.comp_id
+
+  left join tbl_madu_trng_sessn ts
+    on ut.trainning_id = ts.training_id
+   and ut.company_id = ts.comp_id
+   and ts.session_number =
+       (select max(t.session_number)
+          from tbl_madu_trng_sessn t
+         where t.training_id = ut.trainning_id
+           and t.comp_id = ut.company_id)
+
+ where tt.comp_id = 296191
+   and td.training_type_id = tt.tab_id
+   and td.training_id = ut.trainning_id
+   and td.company_id = ut.company_id
+   and td.course_id = 6
+   and td.approval_status = 1
+   and ut.course_id = 6 and  nvl(ut.is_cancel,0) != 1
+   and ut.user_id = '''||p_userId||'''
+   and ut.company_id = '||p_compId||'
+   and td.training_type_id in ('||p_philosophy||')
+   and td.start_date >= TO_DATE('''||p_startdate||''', ''mm/dd/yyyy'')
+   AND td.end_date <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+  --and trunc(ut.course_startdate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+  -- and trunc(ut.course_enddate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+ group by ut.user_id,
+          td.training_id,
+          td.training_name,
+          td.training_code,
+          tt.training_type,
+          td.created_date,
+          ut.completion_status,
+          td.start_date,
+          td.end_date,
+          td.training_cordinator,
+          td.has_exam,
+          to_char(st.created_date),
+          em.exam_id,
+          ts.session_number,
+          ut.trainning_id,
+          ut.company_id,
+          qpm.question_paper_name,
+          em.total_marks,
+          uet.mark_scored,
+          uet.result
+ order by td.start_date desc';
+
+ end if;
+
+ if(p_type = 2) then
+   open p_as_outresult for
+'select sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end) as completed_count,
+       sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end) as pending_count,
+       count(t.user_id) as assigned_count,
+      round(decode(sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as percentage,
+            round(decode(sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as pendpercentage ,
+           0 as trng_count,
+           0 as user_count
+  from tbl_madu_trng_user_track t,tbl_madu_training_details td
+ where t.course_id = '||p_Module_id||'    and td.training_type_id in ('||p_philosophy||') and
+  t.trainning_id = td.training_id and  t.company_id = td.company_id and  nvl(t.is_cancel,0) != 1
+   and t.user_id = '''||p_userId||'''
+   --and trunc(t.assigneddate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+  -- AND trunc(t.assigneddate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+  and trunc(t.course_startdate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+   and trunc(t.course_enddate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+   and t.company_id = '|| p_compId ||' ';
+
+   end if;
+
+   if(p_type = 3) then  --vilt
+   open p_as_outresult for
+'select sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end) as completed_count,
+       sum(case
+             when t.completion_status in(0,3) then
+              1
+             else
+              0
+           end) as pending_count,
+       count(t.user_id) as assigned_count,
+      round(decode(sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as percentage,
+            round(decode(sum(case
+             when t.completion_status in(0,3) then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status in (0,3) then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as pendpercentage ,
+           0 as trng_count,
+           0 as user_count
+  from tbl_madu_trng_user_track t , tbl_madu_training_details td
+
+    where t.course_id = 5   and td.training_type_id in ('||p_philosophy||') and
+  t.trainning_id = td.training_id and  t.company_id = td.company_id
+   and t.user_id = '''||p_userId||'''
+   and t.is_selflearned <> 1 and t.modeofassign <> 3 and  t.is_cancel <> 1 and
+    (trunc(nvl(t.course_startdate,sysdate)) between
+           to_date('''||p_startdate||''', ''mm/dd/yyyy'') and
+           to_date('''||p_end_date ||''', ''mm/dd/yyyy''))
+   and t.company_id = '|| p_compId ||'  ';
+
+
+
+   end if;
+
+
+   if(p_type = 4) then  -- blended
+
+
+
+   open p_as_outresult for
+'select sum(case
+             when t.completion_status = 1 and t.attend_mark_status = 1 then
+              1
+             else
+              0
+           end) as completed_count,
+       sum(case
+             when t.completion_status in (0,3) then
+              1
+             else
+              0
+           end) as pending_count,
+       count(t.user_id) as assigned_count,
+      round(decode(sum(case
+             when t.completion_status = 1 and t.attend_mark_status = 1 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 1 and  t.attend_mark_status = 1 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as percentage,
+            round(decode(sum(case
+             when t.completion_status in (0,3) then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status in (0,3) then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as pendpercentage ,
+           0 as trng_count,
+           0 as user_count
+  from tbl_madu_trng_user_track t, tbl_madu_training_details td
+ where t.course_id = '||p_Module_id||'   and td.training_type_id in ('||p_philosophy||') and
+  t.trainning_id = td.training_id and  t.company_id = td.company_id
+   and t.user_id = '''||p_userId||'''
+   and t.is_selflearned <> 1 and t.modeofassign <> 3 and  t.is_cancel <> 1
+  --and trunc(t.assigneddate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+  --AND trunc(t.assigneddate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+  --and trunc(t.course_startdate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+  --and trunc(t.course_enddate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+
+ and  (trunc(nvl(t.course_startdate,sysdate)) between
+           to_date('''||p_startdate||''', ''mm/dd/yyyy'') and
+           to_date('''||p_end_date ||''', ''mm/dd/yyyy''))
+
+   and t.company_id = '|| p_compId ||' ';
+
+   end if;
+
+
+if(p_type = 5 ) then   -- elearning  graph
+   open p_as_outresult for
+'select sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end) as completed_count,
+       sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end) as pending_count,
+       count(t.user_id) as assigned_count,
+      round(decode(sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 1 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as percentage,
+            round(decode(sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end),0,0, sum(case
+             when t.completion_status = 0 then
+              1
+             else
+              0
+           end)*100/count(t.user_id)),2) as pendpercentage ,
+           0 as trng_count,
+           0 as user_count
+  from  tbl_madu_trng_user_track t, tbl_madu_training_details dt
+ where t.course_id = '||p_Module_id||'
+   and t.user_id = '''||p_userId||'''
+   and t.is_selflearned <> 1
+   and t.modeofassign <> 3
+   and nvl(t.is_cancel, 0) = 0
+   and t.trainning_id = dt.training_id
+   and t.company_id = dt.company_id
+   and dt.status = 1
+   and nvl(t.is_cancel,0)=0 and trunc(t.course_startdate) >= TO_DATE('''||p_startdate ||''', ''mm/dd/yyyy'')
+   AND trunc(t.course_startdate) <= TO_DATE('''||p_end_date||''', ''mm/dd/yyyy'')
+   and t.company_id = '|| p_compId ||' ';
+
+   end if;
+
+
+
+end ;
+
+
+
+
+
+
+
+
+
+
+  /* ----------------------------------         for exception handling         ----------------------------------*/
+   /*   exception
+        when others then
+          p_errormsg := substr(sqlerrm, 1, 150) || '- error code :-' || sqlcode || 'µ' || 2 || '~';
+
+          insert into tbl_madu_errorlog
+            (en_date, error, proc, parameteres_input)
+          values
+            (sysdate,
+             p_errormsg,
+             'proc_madu_get_selflrning_usr',
+             'p_userid = ' || p_userId || ' p_compId = ' || p_compId);
+               commit;*/
+    /* ----------------------------------         for exception handling         ----------------------------------*/
